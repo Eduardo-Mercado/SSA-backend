@@ -99,15 +99,19 @@ namespace SSA.backend.Controllers
         [Route("getMenu")]
         public async Task<ActionResult> GetMenuAsync()
         {
-            var userName = User.Identity.Name;
-            var info = await new AutenticationService(this._autenticatonAction).GetMenuByUserNameAsync(userName);
-
-            if (info != null)
+            if (User.Identity.IsAuthenticated)
             {
-                return Ok(info);
+
+                var userName = User.Identity.Name;
+                var info = await new AutenticationService(this._autenticatonAction).GetMenuByUserNameAsync(userName);
+
+                if (info != null)
+                {
+                    return Ok(info);
+                }
             }
 
-            return BadRequest();
+            return Unauthorized();
         }
     }
 }
